@@ -1,66 +1,172 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## 📘 Laravel Task API - Dokumentasi
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### 🚀 Menjalankan Project Laravel
 
-## About Laravel
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/yushivan/technical_test_1
+   cd technical_test_1
+   ```
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+2. **Install Dependency**
+   ```bash
+   composer install
+   npm install && npm run dev
+   ```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+3. **Buat File `.env`**
+   ```bash
+   cp .env.example .env
+   ```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+4. **Atur Environment**
+   Edit `.env` dan sesuaikan koneksi database:
+   ```
+   DB_DATABASE=namadb
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-## Learning Laravel
+5. **Generate Key & Jalankan Migration**
+   ```bash
+   php artisan key:generate
+   php artisan migrate
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+6. **Jalankan Server**
+   ```bash
+   php artisan serve
+   ```
+   Website bisa diakses di: [http://localhost:8000](http://localhost:8000)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 👥 Register dan Login via Website
 
-## Laravel Sponsors
+1. Buka halaman [http://localhost:8000/register](http://localhost:8000/register)
+2. Buat akun baru
+3. Setelah itu login di [http://localhost:8000/login](http://localhost:8000/login)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+---
 
-### Premium Partners
+### 🔐 Login via API
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```http
+POST /api/login
+```
 
-## Contributing
+**Body:**
+```json
+{
+  "email": "email@example.com",
+  "password": "password"
+}
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Response:**
+```json
+{
+  "token": "your-api-token"
+}
+```
 
-## Code of Conduct
+Simpan token ini, dan gunakan untuk semua permintaan API berikutnya di header:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```
+Authorization: Bearer your-api-token
+```
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### ✅ API Endpoints
 
-## License
+Semua route API berikut menggunakan prefix `/api` dan **wajib login** menggunakan token Sanctum.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### 📄 GET /api/tasks
+
+Menampilkan semua tugas milik user yang sedang login.
+
+**Headers:**
+```
+Authorization: Bearer your-api-token
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "title": "Belajar Laravel",
+    "description": "Mengerjakan dokumentasi",
+    "due_date": "2025-04-10"
+  },
+  ...
+]
+```
+
+---
+
+#### ➕ POST /api/tasks
+
+Membuat task baru.
+
+**Headers:**
+```
+Authorization: Bearer your-api-token
+```
+
+**Body:**
+```json
+{
+  "title": "Belajar Laravel",
+  "description": "Bikin CRUD API",
+  "due_date": "2025-04-12"
+}
+```
+
+---
+
+#### 🔍 GET /api/tasks/{id}
+
+Melihat detail task berdasarkan ID.
+
+---
+
+#### ✏️ PUT /api/tasks/{id}
+
+Mengedit task.
+
+**Body:**
+```json
+{
+  "title": "Update Judul",
+  "description": "Update deskripsi",
+  "due_date": "2025-04-15"
+}
+```
+
+---
+
+#### ❌ DELETE /api/tasks/{id}
+
+Menghapus task berdasarkan ID.
+
+---
+
+### 🧪 Cara Test API dengan Postman / REST Client
+
+1. **Login dengan POST `/api/login`**
+2. **Copy token dari response**
+3. **Set header:**
+   ```
+   Authorization: Bearer {token}
+   ```
+4. **Gunakan endpoint seperti GET `/api/tasks`**
+
+---
+
+### 💡 Tips
+
+- Jika token kadaluarsa, lakukan login ulang untuk mendapatkan token baru.
+- Untuk register pengguna baru, gunakan form di website karena tidak disediakan endpoint API register.
+
